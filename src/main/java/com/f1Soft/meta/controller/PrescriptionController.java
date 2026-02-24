@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -13,6 +14,16 @@ public class PrescriptionController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @GetMapping
+    public List<Map<String, Object>> getAllPrescriptions() {
+        String sql = "SELECT p.*, pt.patientname, m.medicationame, ph.pharmacistname " +
+                     "FROM prescription p " +
+                     "LEFT JOIN patient pt ON p.patientid = pt.patientid " +
+                     "LEFT JOIN medication m ON p.medicationid = m.medicationid " +
+                     "LEFT JOIN pharmacist ph ON p.pharmacistid = ph.pharmacistid";
+        return jdbcTemplate.queryForList(sql);
+    }
 
     @PostMapping
     public String createPrescription(@RequestBody Map<String, Object> body) {

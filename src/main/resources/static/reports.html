@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports - Hamro Pharmacy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <svg class="logo" viewBox="0 0 48 48" width="44" height="44">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="#2a9d8f" stroke-width="2"/>
+          <circle cx="24" cy="24" r="14" fill="none" stroke="#2a9d8f" stroke-width="2"/>
+          <circle cx="24" cy="24" r="5" fill="#2a9d8f"/>
+          <line x1="24" y1="2" x2="24" y2="46" stroke="#c8e6c0" stroke-width="1.5"/>
+          <line x1="2" y1="24" x2="46" y2="24" stroke="#c8e6c0" stroke-width="1.5"/>
+        </svg>
+        <h3>Hamro Pharmacy</h3>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="prescriptions.html">Prescriptions</a></li>
+        <li><a href="orders.html">Orders</a></li>
+        <li><a href="reports.html" class="active">Reports</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Analytics & Reports</h1>
+      <p>Comprehensive insights into your pharmacy operations</p>
+    </div>
+
+    <!-- Time Period Tabs -->
+    <div class="time-tabs">
+      <button class="time-tab" data-period="daily">Daily</button>
+      <button class="time-tab" data-period="weekly">Weekly</button>
+      <button class="time-tab active" data-period="monthly">Monthly</button>
+      <button class="time-tab" data-period="yearly">Yearly</button>
+    </div>
+
+    <!-- Report Cards -->
+    <div class="report-cards">
+      <div class="report-card teal">
+        <div class="report-card-header">
+          <div class="report-card-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <span class="report-card-badge">+12.5%</span>
+        </div>
+        <div class="report-value" id="report-revenue">...</div>
+        <div class="report-label">Total Revenue</div>
+      </div>
+      <div class="report-card blue">
+        <div class="report-card-header">
+          <div class="report-card-icon">
+            <i class="fas fa-cart-shopping"></i>
+          </div>
+          <span class="report-card-badge">+8.3%</span>
+        </div>
+        <div class="report-value" id="report-orders">...</div>
+        <div class="report-label">Total Orders</div>
+      </div>
+      <div class="report-card purple">
+        <div class="report-card-header">
+          <div class="report-card-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <span class="report-card-badge">+15.7%</span>
+        </div>
+        <div class="report-value" id="report-customers">...</div>
+        <div class="report-label">Total Customers</div>
+      </div>
+      <div class="report-card orange">
+        <div class="report-card-header">
+          <div class="report-card-icon">
+            <i class="fas fa-file-prescription"></i>
+          </div>
+          <span class="report-card-badge">+6.2%</span>
+        </div>
+        <div class="report-value" id="report-prescriptions">...</div>
+        <div class="report-label">Prescriptions</div>
+      </div>
+    </div>
+
+    <!-- Report Sections -->
+    <div class="report-sections">
+      <!-- Sales Overview -->
+      <div class="report-section">
+        <h3>Sales Overview</h3>
+        <div class="sales-bar">
+          <span class="month">January</span>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: 78%"></div>
+          </div>
+          <span class="amount">$68,500</span>
+        </div>
+        <div class="sales-bar">
+          <span class="month">February</span>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: 82%"></div>
+          </div>
+          <span class="amount">$72,300</span>
+        </div>
+        <div class="sales-bar">
+          <span class="month">March</span>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: 75%"></div>
+          </div>
+          <span class="amount">$65,800</span>
+        </div>
+        <div class="sales-bar">
+          <span class="month">April</span>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: 88%"></div>
+          </div>
+          <span class="amount">$78,200</span>
+        </div>
+        <div class="sales-bar">
+          <span class="month">May</span>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: 92%"></div>
+          </div>
+          <span class="amount">$82,400</span>
+        </div>
+        <div class="sales-bar">
+          <span class="month">June</span>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: 85%"></div>
+          </div>
+          <span class="amount">$74,800</span>
+        </div>
+      </div>
+
+      <!-- Top Selling Products -->
+      <div class="report-section">
+        <h3>Top Selling Products</h3>
+        <div id="top-products-container">
+          <p style="text-align:center; color:#888; padding:20px;">Loading top products...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-area">
+            <svg viewBox="0 0 48 48" width="36" height="36">
+              <circle cx="24" cy="24" r="22" fill="none" stroke="#2a9d8f" stroke-width="2"/>
+              <circle cx="24" cy="24" r="14" fill="none" stroke="#2a9d8f" stroke-width="2"/>
+              <circle cx="24" cy="24" r="5" fill="#2a9d8f"/>
+              <line x1="24" y1="2" x2="24" y2="46" stroke="#c8e6c0" stroke-width="1.5"/>
+              <line x1="2" y1="24" x2="46" y2="24" stroke="#c8e6c0" stroke-width="1.5"/>
+            </svg>
+            <h3>Hamro Pharmacy</h3>
+          </div>
+          <p>Modern pharmacy management solution for efficient healthcare operations.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="inventory.html">Inventory</a></li>
+            <li><a href="prescriptions.html">Prescriptions</a></li>
+            <li><a href="orders.html">Orders</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Hamro Pharmacy. All rights reserved.</p>
+        <p><a href="#">Powered by Readdy</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

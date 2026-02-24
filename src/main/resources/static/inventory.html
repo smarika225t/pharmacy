@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory Management - Hamro Pharmacy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <svg class="logo" viewBox="0 0 48 48" width="44" height="44">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="#2a9d8f" stroke-width="2"/>
+          <circle cx="24" cy="24" r="14" fill="none" stroke="#2a9d8f" stroke-width="2"/>
+          <circle cx="24" cy="24" r="5" fill="#2a9d8f"/>
+          <line x1="24" y1="2" x2="24" y2="46" stroke="#c8e6c0" stroke-width="1.5"/>
+          <line x1="2" y1="24" x2="46" y2="24" stroke="#c8e6c0" stroke-width="1.5"/>
+        </svg>
+        <h3>Hamro Pharmacy</h3>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="inventory.html" class="active">Inventory</a></li>
+        <li><a href="prescriptions.html">Prescriptions</a></li>
+        <li><a href="orders.html">Orders</a></li>
+        <li><a href="reports.html">Reports</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Inventory Management</h1>
+      <p>Track and manage your pharmacy stock efficiently</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-info">
+          <div class="stat-label">Total Items</div>
+          <div class="stat-value">...</div>
+        </div>
+        <div class="stat-icon blue">
+          <i class="fas fa-boxes-stacked"></i>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <div class="stat-label">Low Stock</div>
+          <div class="stat-value">...</div>
+        </div>
+        <div class="stat-icon orange">
+          <i class="fas fa-triangle-exclamation"></i>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <div class="stat-label">Categories</div>
+          <div class="stat-value">...</div>
+        </div>
+        <div class="stat-icon blue">
+          <i class="fas fa-folder-open"></i>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <div class="stat-label">Expiring Soon</div>
+          <div class="stat-value">...</div>
+        </div>
+        <div class="stat-icon red">
+          <i class="fas fa-clock"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search medicines..." id="inventorySearch">
+      </div>
+      <select class="filter-select" id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="antibiotics">Antibiotics</option>
+        <option value="pain-relief">Pain Relief</option>
+        <option value="cardiovascular">Cardiovascular</option>
+        <option value="diabetes">Diabetes</option>
+        <option value="respiratory">Respiratory</option>
+        <option value="vitamins">Vitamins</option>
+        <option value="gastrointestinal">Gastrointestinal</option>
+        <option value="allergy">Allergy</option>
+      </select>
+    </div>
+
+    <!-- Inventory Table -->
+    <div class="table-container">
+      <table class="data-table" id="inventoryTable">
+        <thead>
+          <tr>
+            <th>Medicine Name</th>
+            <th>Category</th>
+            <th>Stock</th>
+            <th>Price</th>
+            <th>Expiry Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="7" style="text-align:center;padding:40px;color:#8e9eab;">
+              <i class="fas fa-spinner fa-spin"></i> Loading medications from database...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-area">
+            <svg viewBox="0 0 48 48" width="36" height="36">
+              <circle cx="24" cy="24" r="22" fill="none" stroke="#2a9d8f" stroke-width="2"/>
+              <circle cx="24" cy="24" r="14" fill="none" stroke="#2a9d8f" stroke-width="2"/>
+              <circle cx="24" cy="24" r="5" fill="#2a9d8f"/>
+              <line x1="24" y1="2" x2="24" y2="46" stroke="#c8e6c0" stroke-width="1.5"/>
+              <line x1="2" y1="24" x2="46" y2="24" stroke="#c8e6c0" stroke-width="1.5"/>
+            </svg>
+            <h3>Hamro Pharmacy</h3>
+          </div>
+          <p>Modern pharmacy management solution for efficient healthcare operations.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="inventory.html">Inventory</a></li>
+            <li><a href="prescriptions.html">Prescriptions</a></li>
+            <li><a href="orders.html">Orders</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Hamro Pharmacy. All rights reserved.</p>
+        <p><a href="#">Powered by Readdy</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

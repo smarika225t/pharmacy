@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,6 +15,15 @@ public class SalesController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @GetMapping
+    public List<Map<String, Object>> getAllSales() {
+        String sql = "SELECT s.*, pt.patientname, ph.pharmacistname " +
+                     "FROM sales s " +
+                     "LEFT JOIN patient pt ON s.patientid = pt.patientid " +
+                     "LEFT JOIN pharmacist ph ON s.pharmacistid = ph.pharmacistid";
+        return jdbcTemplate.queryForList(sql);
+    }
 
     @PostMapping
     public String createSales(@RequestBody Map<String, Object> body) {

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,6 +15,18 @@ public class MedicationController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @GetMapping
+    public List<Map<String, Object>> getAllMedications() {
+        String sql = "SELECT m.*, s.suppliername FROM medication m LEFT JOIN supplier s ON m.supplierid = s.supplierid";
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteMedication(@PathVariable("id") int id) {
+        jdbcTemplate.update("DELETE FROM medication WHERE medicationid = ?", id);
+        return "Medication deleted successfully";
+    }
 
     @PostMapping
     public String createMedication(@RequestBody Map<String, Object> body) {

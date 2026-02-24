@@ -15,6 +15,11 @@ public class PatientController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @GetMapping
+    public List<Map<String, Object>> getAllPatients() {
+        return jdbcTemplate.queryForList("SELECT * FROM patient");
+    }
+
     // 1️⃣ Register New Patient
     @PostMapping("/register")
     public String registerPatient(@RequestBody Map<String, Object> body) {

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -12,6 +13,11 @@ public class PharmacistController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @GetMapping
+    public List<Map<String, Object>> getAllPharmacists() {
+        return jdbcTemplate.queryForList("SELECT * FROM pharmacist");
+    }
 
     @PostMapping
     public String createPharmacist(@RequestBody Map<String, Object> body) {
