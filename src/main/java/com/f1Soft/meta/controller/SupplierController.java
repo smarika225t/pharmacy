@@ -23,19 +23,23 @@ public class SupplierController {
     public String createSupplier(@RequestBody Map<String, Object> body) {
 
         String suppliername = (String) body.get("suppliername");
-        String supplieraddress = (String) body.get("supplieraddress");
-        Long supplierphone = Long.valueOf(body.get("supplierphone").toString());
-        String companyname = (String) body.get("companyname");
+        String suppliercontact = (String) body.get("suppliercontact");
+        String supplieremail = (String) body.get("supplieremail");
 
-        String sql = "INSERT INTO supplier (suppliername, supplieraddress, supplierphone, companyname) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO supplier (suppliername, suppliercontact, supplieremail) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(sql,
                 suppliername,
-                supplieraddress,
-                supplierphone,
-                companyname
+                suppliercontact,
+                supplieremail
         );
 
         return "Supplier inserted successfully";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteSupplier(@PathVariable int id) {
+        jdbcTemplate.update("DELETE FROM supplier WHERE supplierid = ?", id);
+        return "Supplier deleted successfully";
     }
 }

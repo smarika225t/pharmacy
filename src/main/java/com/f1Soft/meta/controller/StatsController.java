@@ -20,9 +20,9 @@ public class StatsController {
         Map<String, Object> stats = new HashMap<>();
         try {
             stats.put("totalItems", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM medication", Integer.class));
-            stats.put("lowStock", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM medication WHERE medicationstockqty < 20", Integer.class));
+            stats.put("lowStock", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM medication WHERE medicationquantity < 20", Integer.class));
             stats.put("categories", jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT medicationcategory) FROM medication", Integer.class));
-            stats.put("expiringSoon", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM medication WHERE medicationexpirydate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 90 DAY)", Integer.class));
+            stats.put("expiringSoon", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM medication WHERE medicationexpdate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 90 DAY)", Integer.class));
         } catch (Exception e) {
             stats.put("totalItems", 0);
             stats.put("lowStock", 0);
@@ -37,7 +37,7 @@ public class StatsController {
         Map<String, Object> stats = new HashMap<>();
         try {
             stats.put("totalOrders", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM sales", Integer.class));
-            stats.put("totalRevenue", jdbcTemplate.queryForObject("SELECT COALESCE(SUM(totalamount), 0) FROM sales", java.math.BigDecimal.class));
+            stats.put("totalRevenue", jdbcTemplate.queryForObject("SELECT COALESCE(SUM(salestotal), 0) FROM sales", java.math.BigDecimal.class));
         } catch (Exception e) {
             stats.put("totalOrders", 0);
             stats.put("totalRevenue", 0);
@@ -60,7 +60,7 @@ public class StatsController {
     public Map<String, Object> getReportStats() {
         Map<String, Object> stats = new HashMap<>();
         try {
-            stats.put("totalRevenue", jdbcTemplate.queryForObject("SELECT COALESCE(SUM(totalamount), 0) FROM sales", java.math.BigDecimal.class));
+            stats.put("totalRevenue", jdbcTemplate.queryForObject("SELECT COALESCE(SUM(salestotal), 0) FROM sales", java.math.BigDecimal.class));
             stats.put("totalOrders", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM sales", Integer.class));
             stats.put("totalCustomers", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM patient", Integer.class));
             stats.put("totalPrescriptions", jdbcTemplate.queryForObject("SELECT COUNT(*) FROM prescription", Integer.class));

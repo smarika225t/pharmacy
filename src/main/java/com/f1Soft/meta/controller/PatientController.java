@@ -25,19 +25,17 @@ public class PatientController {
     public String registerPatient(@RequestBody Map<String, Object> body) {
 
         String patientname = (String) body.get("patientname");
-        Integer patientage = (Integer) body.get("patientage");
-        String patientgender = (String) body.get("patientgender");
-        String patientphone = (String) body.get("patientphone");
-        String patientddress = (String) body.get("patientddress");
+        String patientcontact = (String) body.get("patientcontact");
+        String patientemail = (String) body.get("patientemail");
+        String patientaddress = (String) body.get("patientaddress");
 
-        String sql = "INSERT INTO patient (patientname, patientage, patientgender, patientphone, patientddress) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO patient (patientname, patientcontact, patientemail, patientaddress) VALUES (?, ?, ?, ?)";
 
         jdbcTemplate.update(sql,
                 patientname,
-                patientage,
-                patientgender,
-                patientphone,
-                patientddress
+                patientcontact,
+                patientemail,
+                patientaddress
         );
 
         return "Patient registered successfully";
@@ -79,14 +77,20 @@ public class PatientController {
         return "Prescription issued successfully";
     }
 
-    // 4️⃣ Find Patient by Phone
+    // 4️⃣ Find Patient by Contact
     @PostMapping("/find-by-phone")
     public List<Map<String, Object>> findPatientByPhone(@RequestBody Map<String, Object> body) {
 
-        String patientphone = (String) body.get("patientphone");
+        String patientcontact = (String) body.get("patientcontact");
 
-        String sql = "SELECT * FROM patient WHERE patientphone = ?";
+        String sql = "SELECT * FROM patient WHERE patientcontact = ?";
 
-        return jdbcTemplate.queryForList(sql, patientphone);
+        return jdbcTemplate.queryForList(sql, patientcontact);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deletePatient(@PathVariable int id) {
+        jdbcTemplate.update("DELETE FROM patient WHERE patientid = ?", id);
+        return "Patient deleted successfully";
     }
 }

@@ -17,12 +17,12 @@ public class UpdateSalesController {
     public String updateSales(@RequestBody Map<String, Object> body) {
 
         Integer salesid = (Integer) body.get("salesid");
-        String paymentmethod = (String) body.get("paymentmethod");
+        Integer salesquantity = Integer.valueOf(body.get("salesquantity").toString());
 
-        String sql = "UPDATE sales SET paymentmethod = ? WHERE salesid = ?";
+        String sql = "UPDATE sales SET salesquantity = ? WHERE salesid = ?";
 
         jdbcTemplate.update(sql,
-                paymentmethod,
+                salesquantity,
                 salesid
         );
 

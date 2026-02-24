@@ -31,19 +31,27 @@ public class PrescriptionController {
         Integer patientid = (Integer) body.get("patientid");
         Integer medicationid = (Integer) body.get("medicationid");
         Integer pharmacistid = (Integer) body.get("pharmacistid");
-        String prescriptionduration = (String) body.get("prescriptionduration");
         LocalDate prescriptiondate = LocalDate.parse(body.get("prescriptiondate").toString());
+        String prescriptiondosage = (String) body.get("prescriptiondosage");
+        String prescriptionduration = (String) body.get("prescriptionduration");
 
-        String sql = "INSERT INTO prescription (patientid, medicationid, pharmacistid, prescriptionduration, prescriptiondate) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO prescription (patientid, medicationid, pharmacistid, prescriptiondate, prescriptiondosage, prescriptionduration) VALUES (?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql,
                 patientid,
                 medicationid,
                 pharmacistid,
-                prescriptionduration,
-                prescriptiondate
+                prescriptiondate,
+                prescriptiondosage,
+                prescriptionduration
         );
 
         return "Prescription inserted successfully";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deletePrescription(@PathVariable int id) {
+        jdbcTemplate.update("DELETE FROM prescription WHERE prescriptionid = ?", id);
+        return "Prescription deleted successfully";
     }
 }

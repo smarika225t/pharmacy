@@ -17,12 +17,12 @@ public class UpdatePharmacistController {
     public String updatePharmacist(@RequestBody Map<String, Object> body) {
 
         String pharmacistname = (String) body.get("pharmacistname");
-        String pharmacistphone = (String) body.get("pharmacistphone");
+        String pharmacistcontact = (String) body.get("pharmacistcontact");
 
-        String sql = "UPDATE pharmacist SET pharmacistphone = ? WHERE pharmacistname = ?";
+        String sql = "UPDATE pharmacist SET pharmacistcontact = ? WHERE pharmacistname = ?";
 
         jdbcTemplate.update(sql,
-                pharmacistphone,
+                pharmacistcontact,
                 pharmacistname
         );
 

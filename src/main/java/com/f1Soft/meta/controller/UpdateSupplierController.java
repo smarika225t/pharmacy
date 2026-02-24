@@ -17,12 +17,12 @@ public class UpdateSupplierController {
     public String updateSupplier(@RequestBody Map<String, Object> body) {
 
         String suppliername = (String) body.get("suppliername");
-        Long supplierphone = Long.valueOf(body.get("supplierphone").toString());
+        String suppliercontact = (String) body.get("suppliercontact");
 
-        String sql = "UPDATE supplier SET supplierphone = ? WHERE suppliername = ?";
+        String sql = "UPDATE supplier SET suppliercontact = ? WHERE suppliername = ?";
 
         jdbcTemplate.update(sql,
-                supplierphone,
+                suppliercontact,
                 suppliername
         );
 

@@ -111,6 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
       display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;
     }
     .btn-add-new:hover { background: #1f7a6f; }
+    .btn-add-supplier {
+      background: #5b8def; color: white; padding: 10px 20px;
+      border-radius: 8px; font-weight: 600; cursor: pointer; border: none;
+      display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;
+    }
+    .btn-add-supplier:hover { background: #4a7ad4; }
   `;
   document.head.appendChild(style);
 
@@ -160,8 +166,8 @@ async function initInventoryPage() {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#8e9eab;">No medications found. Add one to get started.</td></tr>';
     } else {
       medications.forEach(med => {
-        const isLowStock = (med.medicationstockqty || 0) < 20;
-        const expiryDate = med.medicationexpirydate ? new Date(med.medicationexpirydate) : null;
+        const isLowStock = (med.medicationquantity || 0) < 20;
+        const expiryDate = med.medicationexpdate ? new Date(med.medicationexpdate) : null;
         const now = new Date();
         const daysUntilExpiry = expiryDate ? Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24)) : 999;
         const isExpiringSoon = daysUntilExpiry <= 90 && daysUntilExpiry > 0;
@@ -182,9 +188,9 @@ async function initInventoryPage() {
             <div class="medicine-brand">${escapeHtml(med.suppliername || 'N/A')}</div>
           </td>
           <td><span class="badge ${categoryBadgeClass}">${escapeHtml(med.medicationcategory || 'N/A')}</span></td>
-          <td>${med.medicationstockqty || 0}</td>
+          <td>${med.medicationquantity || 0}</td>
           <td>$${parseFloat(med.medicationprice || 0).toFixed(2)}</td>
-          <td>${med.medicationexpirydate || 'N/A'}</td>
+          <td>${med.medicationexpdate ? new Date(med.medicationexpdate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</td>
           <td>${statusBadge}</td>
           <td>
             <div class="action-btns">
@@ -215,6 +221,7 @@ async function initInventoryPage() {
 
   // Add "Add Medication" button
   addButtonToSearchBar('Add Medication', () => showAddMedicationModal());
+  addButtonToSearchBar2('Add Supplier', () => showAddSupplierModal());
 
   // Search & filter
   const inventorySearch = document.getElementById('inventorySearch');
@@ -223,17 +230,26 @@ async function initInventoryPage() {
   if (categoryFilter) categoryFilter.addEventListener('change', () => filterTable('inventoryTable', inventorySearch, categoryFilter));
 }
 
-function showAddMedicationModal() {
+async function showAddMedicationModal() {
+  const suppliers = await apiGet('/supplier');
+  const supplierOptions = (suppliers || []).map(s => ({ value: s.supplierid, label: s.suppliername || `Supplier #${s.supplierid}` }));
+
+  if (supplierOptions.length === 0) {
+    showNotification('No suppliers found. Please add a supplier first.', 'error');
+    showAddSupplierModal(() => showAddMedicationModal());
+    return;
+  }
+
   showModal('Add Medication', [
-    { name: 'supplierid', label: 'Supplier ID', type: 'number', required: true },
+    { name: 'supplierid', label: 'Supplier', type: 'select', options: supplierOptions, required: true },
     { name: 'medicationame', label: 'Medication Name', type: 'text', required: true },
     { name: 'medicationcategory', label: 'Category', type: 'text', required: true },
     { name: 'medicationprice', label: 'Price', type: 'number', step: '0.01', required: true },
-    { name: 'medicationexpirydate', label: 'Expiry Date', type: 'date', required: true },
-    { name: 'medicationstockqty', label: 'Stock Quantity', type: 'number', required: true },
+    { name: 'medicationexpdate', label: 'Expiry Date', type: 'date', required: true },
+    { name: 'medicationquantity', label: 'Stock Quantity', type: 'number', required: true },
   ], async (data) => {
     data.supplierid = parseInt(data.supplierid);
-    data.medicationstockqty = parseInt(data.medicationstockqty);
+    data.medicationquantity = parseInt(data.medicationquantity);
     const result = await apiPost('/medication', data);
     if (result !== null) {
       showNotification('Medication added successfully!', 'success');
@@ -244,9 +260,59 @@ function showAddMedicationModal() {
   });
 }
 
+function showAddSupplierModal(onComplete) {
+  showModal('Add Supplier', [
+    { name: 'suppliername', label: 'Supplier Name', type: 'text', required: true },
+    { name: 'suppliercontact', label: 'Contact Number', type: 'text', required: true },
+    { name: 'supplieremail', label: 'Email', type: 'email', required: true },
+  ], async (data) => {
+    const result = await apiPost('/supplier', data);
+    if (result !== null) {
+      showNotification('Supplier added successfully!', 'success');
+      if (onComplete) onComplete();
+    } else {
+      showNotification('Failed to add supplier.', 'error');
+    }
+  });
+}
+
 // ===================================================================
 // PRESCRIPTIONS PAGE
 // ===================================================================
+
+function showAddPatientModal(onComplete) {
+  showModal('Add Patient', [
+    { name: 'patientname', label: 'Patient Name', type: 'text', required: true },
+    { name: 'patientcontact', label: 'Contact Number', type: 'text', required: true },
+    { name: 'patientemail', label: 'Email', type: 'email', required: true },
+    { name: 'patientaddress', label: 'Address', type: 'text', required: true },
+  ], async (data) => {
+    const result = await apiPost('/patient/register', data);
+    if (result !== null) {
+      showNotification('Patient added successfully!', 'success');
+      if (onComplete) onComplete();
+    } else {
+      showNotification('Failed to add patient.', 'error');
+    }
+  });
+}
+
+function showAddPharmacistModal(onComplete) {
+  showModal('Add Pharmacist', [
+    { name: 'pharmacistname', label: 'Pharmacist Name', type: 'text', required: true },
+    { name: 'pharmacistcontact', label: 'Contact Number', type: 'text', required: true },
+    { name: 'pharmacistemail', label: 'Email', type: 'email', required: true },
+  ], async (data) => {
+    const result = await apiPost('/pharmacist', data);
+    if (result !== null) {
+      showNotification('Pharmacist added successfully!', 'success');
+      if (onComplete) onComplete();
+    } else {
+      showNotification('Failed to add pharmacist.', 'error');
+    }
+  });
+}
+
 async function initPrescriptionsPage() {
   const stats = await apiGet('/stats/prescriptions');
   if (stats) {
@@ -278,11 +344,15 @@ async function initPrescriptionsPage() {
           </div>
           <div class="prescription-detail">
             <i class="fas fa-calendar"></i>
-            <span>${rx.prescriptiondate || 'N/A'}</span>
+            <span>${rx.prescriptiondate ? new Date(rx.prescriptiondate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</span>
           </div>
           <div class="prescription-detail">
             <i class="fas fa-clock"></i>
             <span>Duration: ${escapeHtml(rx.prescriptionduration || 'N/A')}</span>
+          </div>
+          <div class="prescription-detail">
+            <i class="fas fa-pills"></i>
+            <span>Dosage: ${escapeHtml(rx.prescriptiondosage || 'N/A')}</span>
           </div>
           <div class="prescription-medications">
             <div class="label">Medication:</div>
@@ -297,6 +367,7 @@ async function initPrescriptionsPage() {
   }
 
   addButtonToSearchBar('Add Prescription', () => showAddPrescriptionModal());
+  addButtonToSearchBar2('Add Patient', () => showAddPatientModal());
 
   // Search & filter
   const prescriptionSearch = document.getElementById('prescriptionSearch');
@@ -308,10 +379,18 @@ async function initPrescriptionsPage() {
 }
 
 async function showAddPrescriptionModal() {
+  const [patients, medications, pharmacists] = await Promise.all([
+    apiGet('/patient'), apiGet('/medication'), apiGet('/pharmacist')
+  ]);
+  const patientOpts = (patients || []).map(p => ({ value: p.patientid, label: p.patientname || `Patient #${p.patientid}` }));
+  const medOpts = (medications || []).map(m => ({ value: m.medicationid, label: m.medicationame || `Medication #${m.medicationid}` }));
+  const pharmOpts = (pharmacists || []).map(p => ({ value: p.pharmacistid, label: p.pharmacistname || `Pharmacist #${p.pharmacistid}` }));
+
   showModal('Add Prescription', [
-    { name: 'patientid', label: 'Patient ID', type: 'number', required: true },
-    { name: 'medicationid', label: 'Medication ID', type: 'number', required: true },
-    { name: 'pharmacistid', label: 'Pharmacist ID', type: 'number', required: true },
+    { name: 'patientid', label: 'Patient', type: 'select', options: patientOpts, required: true },
+    { name: 'medicationid', label: 'Medication', type: 'select', options: medOpts, required: true },
+    { name: 'pharmacistid', label: 'Pharmacist', type: 'select', options: pharmOpts, required: true },
+    { name: 'prescriptiondosage', label: 'Dosage', type: 'text', required: true, placeholder: 'e.g. 500mg twice daily' },
     { name: 'prescriptionduration', label: 'Duration', type: 'text', required: true, placeholder: 'e.g. 7 days' },
     { name: 'prescriptiondate', label: 'Date', type: 'date', required: true },
   ], async (data) => {
@@ -354,9 +433,9 @@ async function initOrdersPage() {
             <div class="medicine-name">${escapeHtml(sale.patientname || 'Patient #' + sale.patientid)}</div>
             <div class="medicine-brand">${escapeHtml(sale.pharmacistname || '')}</div>
           </td>
-          <td>${sale.salesdate || 'N/A'}</td>
-          <td>1</td>
-          <td>$${parseFloat(sale.totalamount || 0).toFixed(2)}</td>
+          <td>${sale.salesdate ? new Date(sale.salesdate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</td>
+          <td>${sale.salesquantity || 0}</td>
+          <td>$${parseFloat(sale.salestotal || 0).toFixed(2)}</td>
           <td><span class="badge badge-green">Paid</span></td>
           <td><span class="badge badge-green">Completed</span></td>
           <td>
@@ -371,6 +450,7 @@ async function initOrdersPage() {
   }
 
   addButtonToSearchBar('Add Sale', () => showAddSaleModal());
+  addButtonToSearchBar2('Add Pharmacist', () => showAddPharmacistModal());
 
   const orderSearch = document.getElementById('orderSearch');
   const orderStatusFilter = document.getElementById('orderStatusFilter');
@@ -379,15 +459,22 @@ async function initOrdersPage() {
 }
 
 async function showAddSaleModal() {
+  const [patients, pharmacists] = await Promise.all([
+    apiGet('/patient'), apiGet('/pharmacist')
+  ]);
+  const patientOpts = (patients || []).map(p => ({ value: p.patientid, label: p.patientname || `Patient #${p.patientid}` }));
+  const pharmOpts = (pharmacists || []).map(p => ({ value: p.pharmacistid, label: p.pharmacistname || `Pharmacist #${p.pharmacistid}` }));
+
   showModal('Add Sale', [
-    { name: 'pharmacistid', label: 'Pharmacist ID', type: 'number', required: true },
-    { name: 'patientid', label: 'Patient ID', type: 'number', required: true },
+    { name: 'pharmacistid', label: 'Pharmacist', type: 'select', options: pharmOpts, required: true },
+    { name: 'patientid', label: 'Patient', type: 'select', options: patientOpts, required: true },
     { name: 'salesdate', label: 'Sales Date', type: 'date', required: true },
-    { name: 'totalamount', label: 'Total Amount', type: 'number', step: '0.01', required: true },
-    { name: 'paymentmethod', label: 'Payment Method', type: 'text', required: true, placeholder: 'e.g. Cash, Card' },
+    { name: 'salesquantity', label: 'Quantity', type: 'number', required: true },
+    { name: 'salestotal', label: 'Total Amount', type: 'number', step: '0.01', required: true },
   ], async (data) => {
     data.pharmacistid = parseInt(data.pharmacistid);
     data.patientid = parseInt(data.patientid);
+    data.salesquantity = parseInt(data.salesquantity);
     const result = await apiPost('/sales', data);
     if (result !== null) {
       showNotification('Sale added successfully!', 'success');
@@ -547,6 +634,18 @@ function addButtonToSearchBar(label, onClick) {
   }
 }
 
+function addButtonToSearchBar2(label, onClick) {
+  const searchBar = document.querySelector('.search-filter-bar');
+  if (searchBar && !searchBar.querySelector('.btn-add-supplier')) {
+    const btn = document.createElement('button');
+    btn.className = 'btn-add-supplier';
+    btn.innerHTML = `<i class="fas fa-truck"></i> ${label}`;
+    btn.style.cssText = 'margin-left:8px;';
+    btn.addEventListener('click', onClick);
+    searchBar.appendChild(btn);
+  }
+}
+
 function showModal(title, fields, onSave) {
   // Remove any existing modal
   document.querySelector('.modal-overlay')?.remove();
@@ -554,14 +653,29 @@ function showModal(title, fields, onSave) {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
 
-  let fieldsHtml = fields.map(f => `
-    <div class="form-group">
-      <label for="modal-${f.name}">${f.label}</label>
-      <input type="${f.type || 'text'}" id="modal-${f.name}" name="${f.name}"
-             ${f.required ? 'required' : ''} ${f.step ? `step="${f.step}"` : ''}
-             ${f.placeholder ? `placeholder="${f.placeholder}"` : ''}>
-    </div>
-  `).join('');
+  let fieldsHtml = fields.map(f => {
+    if (f.type === 'select' && f.options) {
+      const optionsHtml = f.options.map(o => `<option value="${o.value}">${escapeHtml(o.label)}</option>`).join('');
+      return `
+        <div class="form-group">
+          <label for="modal-${f.name}">${f.label}</label>
+          <select id="modal-${f.name}" name="${f.name}" ${f.required ? 'required' : ''}
+                  style="width:100%;padding:10px 14px;border:1px solid #e0e6ed;border-radius:8px;font-size:14px;background:#fff;">
+            <option value="">-- Select --</option>
+            ${optionsHtml}
+          </select>
+        </div>
+      `;
+    }
+    return `
+      <div class="form-group">
+        <label for="modal-${f.name}">${f.label}</label>
+        <input type="${f.type || 'text'}" id="modal-${f.name}" name="${f.name}"
+               ${f.required ? 'required' : ''} ${f.step ? `step="${f.step}"` : ''}
+               ${f.placeholder ? `placeholder="${f.placeholder}"` : ''}>
+      </div>
+    `;
+  }).join('');
 
   overlay.innerHTML = `
     <div class="modal">
@@ -588,7 +702,8 @@ function showModal(title, fields, onSave) {
     e.preventDefault();
     const formData = {};
     fields.forEach(f => {
-      formData[f.name] = document.getElementById(`modal-${f.name}`).value;
+      const el = document.getElementById(`modal-${f.name}`);
+      formData[f.name] = el ? el.value : '';
     });
     overlay.remove();
     onSave(formData);

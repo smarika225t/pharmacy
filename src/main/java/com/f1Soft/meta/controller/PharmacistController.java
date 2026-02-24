@@ -23,17 +23,23 @@ public class PharmacistController {
     public String createPharmacist(@RequestBody Map<String, Object> body) {
 
         String pharmacistname = (String) body.get("pharmacistname");
-        String pharmacistlicenseNo = (String) body.get("pharmacistlicenseNo");
-        String pharmacistphone = (String) body.get("pharmacistphone");
+        String pharmacistcontact = (String) body.get("pharmacistcontact");
+        String pharmacistemail = (String) body.get("pharmacistemail");
 
-        String sql = "INSERT INTO pharmacist (pharmacistname, pharmacistlicenseNo, pharmacistphone) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO pharmacist (pharmacistname, pharmacistcontact, pharmacistemail) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(sql,
                 pharmacistname,
-                pharmacistlicenseNo,
-                pharmacistphone
+                pharmacistcontact,
+                pharmacistemail
         );
 
         return "Pharmacist inserted successfully";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deletePharmacist(@PathVariable int id) {
+        jdbcTemplate.update("DELETE FROM pharmacist WHERE pharmacistid = ?", id);
+        return "Pharmacist deleted successfully";
     }
 }

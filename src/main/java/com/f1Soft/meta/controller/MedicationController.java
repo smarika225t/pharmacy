@@ -36,11 +36,11 @@ public class MedicationController {
         String medicationcategory = (String) body.get("medicationcategory");
 
         BigDecimal medicationprice = new BigDecimal(body.get("medicationprice").toString());
-        LocalDate medicationexpirydate = LocalDate.parse(body.get("medicationexpirydate").toString());
-        Integer medicationstockqty = (Integer) body.get("medicationstockqty");
+        LocalDate medicationexpdate = LocalDate.parse(body.get("medicationexpdate").toString());
+        Integer medicationquantity = (Integer) body.get("medicationquantity");
 
         String sql = "INSERT INTO medication " +
-                "(supplierid, medicationame, medicationcategory, medicationprice, medicationexpirydate, medicationstockqty) " +
+                "(supplierid, medicationame, medicationcategory, medicationprice, medicationexpdate, medicationquantity) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql,
@@ -48,8 +48,8 @@ public class MedicationController {
                 medicationame,
                 medicationcategory,
                 medicationprice,
-                medicationexpirydate,
-                medicationstockqty
+                medicationexpdate,
+                medicationquantity
         );
 
         return "Medication inserted successfully";

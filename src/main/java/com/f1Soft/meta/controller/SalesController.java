@@ -28,22 +28,28 @@ public class SalesController {
     @PostMapping
     public String createSales(@RequestBody Map<String, Object> body) {
 
-        Integer pharmacistid = (Integer) body.get("pharmacistid");
         Integer patientid = (Integer) body.get("patientid");
+        Integer pharmacistid = (Integer) body.get("pharmacistid");
         LocalDate salesdate = LocalDate.parse(body.get("salesdate").toString());
-        BigDecimal totalamount = new BigDecimal(body.get("totalamount").toString());
-        String paymentmethod = (String) body.get("paymentmethod");
+        Integer salesquantity = Integer.valueOf(body.get("salesquantity").toString());
+        BigDecimal salestotal = new BigDecimal(body.get("salestotal").toString());
 
-        String sql = "INSERT INTO sales (pharmacistid, patientid, salesdate, totalamount, paymentmethod) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sales (patientid, pharmacistid, salesdate, salesquantity, salestotal) VALUES (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql,
-                pharmacistid,
                 patientid,
+                pharmacistid,
                 salesdate,
-                totalamount,
-                paymentmethod
+                salesquantity,
+                salestotal
         );
 
         return "Sales inserted successfully";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteSales(@PathVariable int id) {
+        jdbcTemplate.update("DELETE FROM sales WHERE salesid = ?", id);
+        return "Sale deleted successfully";
     }
 }
